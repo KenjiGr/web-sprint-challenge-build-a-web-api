@@ -3,9 +3,9 @@ const Project = require('./projects-model');
 
 async function validateProjectId (req,res,next){
     try{
-        const user = await Project.get(req.params.id);
-        if(user){
-          req.user = user
+        const project = await Project.get(req.params.id);
+        if(project){
+          req.user = project
         }else{
           next({status: 404, message: 'user not found'});
         }
