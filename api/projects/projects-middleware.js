@@ -14,13 +14,23 @@ async function validateProjectId (req,res,next){
       }
 }
 
-function validateProjectPayload (req,res,next){
-    const { name, description, completed } = req.body;
-    if (!name || !description || !completed) {
-        res.status(400).json({ message: 'missing required name field' });
-    } else {
-    next();
-  }
+async function validateProjectPayload (req,res,next){
+    try {
+        if (!req.body.name || !req.body.description || !req.body.completed) {
+            res.status(400).json({ message: 'fields are required' })
+        } else {
+            next();
+        }
+    } catch (err) {
+        next(err);
+    }
 }
 
-module.exports = {validateProjectId, validateProjectPayload}
+function handleError(err, req, res, next) {
+    res.status(err.status || 500).json({
+        message: err.message,
+        prodMessage: 'something went wrong'
+    })
+}
+
+module.exports = {validateProjectId, validateProjectPayload, handleError}
